@@ -3,13 +3,13 @@
 
 int main () {
     string dirName="documentos/";
-    vector<string> files = vector<string>();
-    getdir(dirName,files);
+    vector<string> archivos = vector<string>();
+    getdir(dirName,archivos);
     vector<string>documentos;
     string palabras;
-    for (unsigned int i = 0;i < files.size();i++) {
-        if(files[i].size()>4){
-            string path=dirName+files[i];
+    for (unsigned int i = 0;i < archivos.size();i++) {
+        if(archivos[i].size()>4){
+            string path=dirName+archivos[i];
             string palTemp=readfile(path);
             transform(palTemp.begin(), palTemp.end(), palTemp.begin(), ::tolower);
             documentos.push_back(palTemp);
