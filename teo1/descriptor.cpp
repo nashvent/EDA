@@ -1,57 +1,44 @@
-#include <bits/stdc++.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <errno.h>
-using namespace std;
-
-int getdir (string dir, vector<string> &files)
-{
-    DIR *dp;
-    struct dirent *dirp;
-    if((dp  = opendir(dir.c_str())) == NULL) {
-        cout << "Error(" << errno << ") opening " << dir << endl;
-        return errno;
-    }
-
-    while ((dirp = readdir(dp)) != NULL) {
-        files.push_back(string(dirp->d_name));
-    }
-    closedir(dp);
-    return 0;
-}
-
-string readFile(string fileName){
-    string line;
-    string texto;
-    ifstream myfile (fileName);
-    if (myfile.is_open())
-    {
-        while ( getline (myfile,line) ){
-            cout << line << '\n';
-            texto=texto+line;
-        }
-        myfile.close();
-    }
-    return texto;
-}
+#include "funciones.h"
 
 
 int main () {
     string dirName="documentos/";
-    //string dir = string("./documentos");
-    
     vector<string> files = vector<string>();
-
     getdir(dirName,files);
-
+    vector<string>documentos;
+    string palabras;
     for (unsigned int i = 0;i < files.size();i++) {
-        //cout << files[i] << endl;
-        string path=dirName+files[i];
-        cout<<readFile(path)<<endl;
+        if(files[i].size()>4){
+            string path=dirName+files[i];
+            string palTemp=readfile(path);
+            transform(palTemp.begin(), palTemp.end(), palTemp.begin(), ::tolower);
+            documentos.push_back(palTemp);
+            palabras=palabras+palTemp;
+        }
     }
-
-    //
-
-
+    removeSpecialCharsFromString(palabras);
+    vector<string>vectPal;
+    stringToVector(palabras,vectPal);
+    removeDuplicateEl(vectPal);
+    removeStopWordsFromVector(vectPal);
+    vector< vector<int> > vectorCaracteristicas(documentos.size(), vector<int>(vectPal.size()));
+    for(int x=0;x<documentos.size();x++){
+        cout<<"========================="<<endl;
+        cout<<"Documento "<<x+1<<endl;
+        cout<<"========================="<<endl;
+        for(int y=0;y<vectPal.size();y++){
+            int countW=countWord(documentos[x],vectPal[y]);
+            
+            if(countW){      
+                cout<<vectPal[y]<<" "<<countW<<endl;
+            }
+            vectorCaracteristicas[x][y]=countW;
+            
+        }
+    }
+    cout<<"Size Vect Pal: "<<vectPal.size()<<endl;
+    cout<<"Document size: "<<documentos.size()<<endl;
+    //printVector(vectPal);
+    
     return 0;
 }
