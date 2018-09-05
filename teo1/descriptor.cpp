@@ -23,19 +23,20 @@ int main () {
     removeStopWordsFromVector(vectPal);
     vector< vector<int> > vectorCaracteristicas(documentos.size(), vector<int>(vectPal.size()));
     for(int x=0;x<documentos.size();x++){
-        cout<<"========================="<<endl;
+       /* cout<<"========================="<<endl;
         cout<<"Documento "<<x+1<<endl;
-        cout<<"========================="<<endl;
+        cout<<"========================="<<endl;*/
         for(int y=0;y<vectPal.size();y++){
             int countW=countWord(documentos[x],vectPal[y]);
             
             if(countW){      
-                cout<<vectPal[y]<<" "<<countW<<endl;
+                //cout<<vectPal[y]<<" "<<countW<<endl;
             }
             vectorCaracteristicas[x][y]=countW;
             
         }
     }
+    printVector(vectPal);
     cout<<"Size Vect Pal: "<<vectPal.size()<<endl;
     cout<<"Document size: "<<documentos.size()<<endl;
     //printVector(vectPal);
