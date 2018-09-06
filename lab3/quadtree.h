@@ -16,42 +16,62 @@ class Punto{
         }
 };
 
+bool contiene(Punto LI,Punto LS,Punto pnt){
+    if(LI.x<=pnt.x and LS.x>=pnt.x and LI.y<=pnt.y and LS.y>=pnt.y){
+        return true;
+    }
+    return false;
+}
+
 class Nodo{
     public:
-        Punto pos;
-        int data;
-        Nodo(Punto npos,int ndata){
-            pos=npos;
-            data=ndata;
-        }
-        Nodo(){
-            data=0;
-        }
-};
-
-class QuadTree{
-    public:
-        Nodo *nodo;
         Punto tl,br; //Tl : topLeft  br: bottonRight
-        QuadTree *treeTL,*treeTR;
-        QuadTree *treeBL,*treeBR;
-        QuadTree(Punto ntl,Punto nbr){
-            nodo=NULL;
-            treeTL=treeTR=NULL;
-            treeBL=treeBR=NULL;
+        vector<Nodo*>hijos;
+        vector<Punto>data;
+        bool hoja;
+        Nodo(Punto ntl,Punto nbr){ //0,0 100,100, 3;
+            hijos.resize(4);
             tl=ntl;
             br=nbr;
+            hoja=true;
         } 
-        void insert(Nodo*);
+};
+
+class Quadtree{
+    public:
+        Nodo *root;
+        int maxEl;
+        Punto LI,LS;
+        Quadtree(Punto nLI,Punto nLS,int nmaxEl){
+            maxEl=nmaxEl;
+            LI=nLI;
+            LS=nLS;
+        }
+        void insert(Punto);
         Nodo*search(Punto);
         bool pertenece(Punto);
 };
 
-void QuadTree::insert(Nodo* nnodo){
-    if(nnodo==NULL)
-        return ;
-    if(!pertenece(nnodo->pos))
+
+void QuadTree::insert(Punto pnt){
+    Nodo *obj=search(pnt);
+    if(obj==NULL){
         return;
+    }
+    obj->data.push_back(pnt);
+    if(obj->data.size()>maxEl){
+        obj->dividir();
+    }
+    return;
+}
+
+Nodo* QuadTree::search(Punto pnt){
+    Nodo*temp=root;
     
+    
+    
+    
+    return temp;
 
 }
+
