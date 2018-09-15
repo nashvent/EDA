@@ -3,8 +3,8 @@ using namespace std;
 
 class Punto{
     public:
-        int x,y;
-        Punto(int nx=0,int ny=0){
+        float x,y;
+        Punto(float nx=0,float ny=0){
             x=nx;
             y=ny;
         }
@@ -13,6 +13,9 @@ class Punto{
                 return true;
             }
             return false;
+        }
+        void print(){
+            cout<<" ("<<x<<","<<y<<") ";
         }
 };
 
@@ -25,16 +28,62 @@ bool contiene(Punto LI,Punto LS,Punto pnt){
 
 class Nodo{
     public:
-        Punto tl,br; //Tl : topLeft  br: bottonRight
+        Punto LI,LS; //LI : topLeft  LS: bottonRight
         vector<Nodo*>hijos;
         vector<Punto>data;
         bool hoja;
-        Nodo(Punto ntl,Punto nbr){ //0,0 100,100, 3;
+        Nodo(Punto nLI,Punto nLS){ //0,0 100,100, 3;
             hijos.resize(4);
-            tl=ntl;
-            br=nbr;
+            LI=nLI;
+            LS=nLS;
             hoja=true;
         } 
+        bool pertenece(Punto pnt){
+            return contiene(LI,LS,pnt);
+        }
+        void dividir(int limEl){
+            float xm=(LI.x+LS.x)/2;
+            float ym=(LI.y+LS.y)/2;
+            hijos[0]=new Nodo(Punto(LI.x,ym),Punto(xm,LS.y));
+            hijos[1]=new Nodo(Punto(xm,ym),LS);
+            hijos[2]=new Nodo(LI,Punto(xm,ym));
+            hijos[3]=new Nodo(Punto(xm,LI.y),Punto(LS.x,ym));
+            for(int t=0;t<data.size();t++){
+                for(int x=0;x<4;x++){
+                    if(hijos[x]->pertenece(data[t])){
+                        hijos[x]->data.push_back(data[t]);
+                        if(hijos[x]->data.size()>limEl){
+                            hijos[x]->dividir(limEl);
+                        }
+                    }   
+                }
+            }
+            hoja=false;
+            data.resize(0);
+            return;      
+        }
+
+        int posicion(Punto pnt){
+            for(int x=0;x<data.size();x++){
+                if(data[x].esIgual(pnt)){
+                    return x;
+                }
+            }
+            return -1;
+        }
+        void printLimites(){
+            cout<<"LI("<<LI.x<<","<<LI.y<<") ";
+            cout<<"LS("<<LS.x<<","<<LS.y<<")";
+            cout<<endl;
+        }
+
+        void printData(){
+            cout<<"Data: ";
+            for(int i=0;i<data.size();i++){
+                data[i].print();
+            }
+            cout<<endl;
+        }
 };
 
 class Quadtree{
@@ -46,32 +95,69 @@ class Quadtree{
             maxEl=nmaxEl;
             LI=nLI;
             LS=nLS;
+            root=new Nodo(LI,LS);
         }
         void insert(Punto);
-        Nodo*search(Punto);
-        bool pertenece(Punto);
+        int search(Punto,Nodo*&);
+        bool remove(Punto);
+        void print();
+        void printR(Nodo *);
+        
 };
 
 
-void QuadTree::insert(Punto pnt){
-    Nodo *obj=search(pnt);
-    if(obj==NULL){
+void Quadtree::insert(Punto pnt){
+    Nodo* obj;
+    int posicion=search(pnt,obj);
+    if(obj==NULL or posicion!=-1){
         return;
     }
     obj->data.push_back(pnt);
     if(obj->data.size()>maxEl){
-        obj->dividir();
+        obj->dividir(maxEl);
     }
     return;
 }
 
-Nodo* QuadTree::search(Punto pnt){
-    Nodo*temp=root;
-    
-    
-    
-    
-    return temp;
+int Quadtree::search(Punto pnt,Nodo* &temp){
+    temp=root;
+    while(!temp->hoja){
+        for(int x=0;x<temp->hijos.size();x++){
+            if(temp->hijos[x]->pertenece(pnt)){
+                temp=temp->hijos[x];
+                break;
+            }
+        }
+    }
+    return temp->posicion(pnt);
+}
 
+bool Quadtree::remove(Punto pnt){
+    Nodo*obj;
+    int posicion=search(pnt,obj);
+    if(obj==NULL or posicion!=-1){
+        return false;
+    }
+    obj->data.erase(obj->data.begin() + posicion);
+    return true;
+}
+
+void Quadtree::printR(Nodo *p){
+    if(p!=NULL){   
+        p->printLimites();
+        p->printData();
+        if(!p->hoja){
+            for(int x=0;x<4;x++){
+                cout<<"Hijo "<<x+1<<endl;
+                printR(p->hijos[x]);  
+            }
+        }
+    
+    }
+}
+
+void Quadtree::print(){
+    Nodo* temp=root;
+    printR(temp);             
 }
 
