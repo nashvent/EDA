@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+  </head>
+<body>
+
+<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #d3d3d3;">
+</canvas>
+<script>
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var escala={x:7,y:7}
+
+ctx.scale(escala.x,escala.y);
+ctx.lineWidth = 0.2;
+ctx.fillStyle="#FF0000";
+ctx.stroke();
+
+function drawPoint(x,y){
+  ctx.fillRect(x,y,1,1);
+}
+
+function drawNode(x,y,x1,y1){
+  
+  ctx.rect(x,y,(x1-x),(y1-y));
+  ctx.stroke();
+
+}
+
+/*
+c.addEventListener('click', function(event) {
+    var rect = c.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    ctx.fillRect(x/2.5,y/2.5,1,1);
+    console.log("x: " + x + " y: " + y); 
+}, false);
+*/
+function printPoints(pnts){
+  apnts = pnts.split("\n");
+  var npnts=[]
+  for (let entry of apnts) {
+    tpnt=entry.split(",");
+    npnts.push(tpnt);
+    drawPoint(tpnt[0],tpnt[1]);
+  }
+  console.log(npnts);
+}
+
+function printNodes(nds){
+
+
+  var ands = nds.split("\n");
+  var nnds=[]
+  for (let entry of ands) {
+    tnds=entry.split(",");
+    nnds.push(tnds);
+    drawNode(tnds[0],tnds[1],tnds[2],tnds[3]);
+  }
+  console.log(nnds);
+}
+
+fetch('anish2.txt')
+  .then(response => response.text())
+  .then(text => printPoints(text))
+
+fetch('anish.txt')
+  .then(response => response.text())
+  .then(text => printNodes(text))
+
+
+</script> 
+
+</body>
+</html>

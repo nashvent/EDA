@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>  
 using namespace std;
 
 class Punto{
@@ -16,6 +18,10 @@ class Punto{
         }
         void print(){
             cout<<" ("<<x<<","<<y<<") ";
+            ofstream file; 
+            file.open("anish2.txt",std::ios_base::app | std::ios_base::out);
+            file<<x<<","<<y<< endl;
+            file.close();
         }
 };
 
@@ -102,14 +108,15 @@ class Quadtree{
         bool remove(Punto);
         void print();
         void printR(Nodo *);
-        
+        void generateTxt();
+        void printRT(Nodo *);
 };
 
 
 void Quadtree::insert(Punto pnt){
     Nodo* obj;
     int posicion=search(pnt,obj);
-    if(obj==NULL or posicion!=-1){
+    if(obj==NULL or posicion!=-1 or (pnt.x==-1 and pnt.y==-1)){
         return;
     }
     obj->data.push_back(pnt);
@@ -144,20 +151,42 @@ bool Quadtree::remove(Punto pnt){
 
 void Quadtree::printR(Nodo *p){
     if(p!=NULL){   
+        ofstream file; 
+        file.open("anish.txt",std::ios_base::app | std::ios_base::out);
+        file<<p->LI.x<<","<<p->LI.y
+        <<","<<p->LS.x<<","<<p->LS.y<< endl;
         p->printLimites();
         p->printData();
+
+
+
         if(!p->hoja){
             for(int x=0;x<4;x++){
                 cout<<"Hijo "<<x+1<<endl;
                 printR(p->hijos[x]);  
             }
         }
+        file.close();
     
     }
 }
+
 
 void Quadtree::print(){
     Nodo* temp=root;
     printR(temp);             
 }
+/*
+void Quadtree::generateTxt(){
+    ofstream outfile ("puntos1.txt");
+    Nodo *p=root;
 
+    while(p!=NULL){
+        outfile <<p->LI.x<<","<<p->LI.y
+        <<","<<LS.x<<","<<LS.y<< std::endl;
+
+    }
+
+    outfile.close();
+}
+*/
