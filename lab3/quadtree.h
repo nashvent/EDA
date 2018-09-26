@@ -17,7 +17,7 @@ class Punto{
             return false;
         }
         void print(){
-            cout<<" ("<<x<<","<<y<<") ";
+            //cout<<" ("<<x<<","<<y<<") ";
             ofstream file; 
             file.open("anish2.txt",std::ios_base::app | std::ios_base::out);
             file<<x<<","<<y<< endl;
@@ -84,11 +84,11 @@ class Nodo{
         }
 
         void printData(){
-            cout<<"Data: ";
+            //cout<<"Data: ";
             for(int i=0;i<data.size();i++){
                 data[i].print();
             }
-            cout<<endl;
+            //cout<<endl;
         }
 };
 
@@ -151,22 +151,26 @@ bool Quadtree::remove(Punto pnt){
 
 void Quadtree::printR(Nodo *p){
     if(p!=NULL){   
-        ofstream file; 
-        file.open("anish.txt",std::ios_base::app | std::ios_base::out);
-        file<<p->LI.x<<","<<p->LI.y
-        <<","<<p->LS.x<<","<<p->LS.y<< endl;
-        p->printLimites();
+
+        //p->printLimites();
         p->printData();
 
 
 
         if(!p->hoja){
             for(int x=0;x<4;x++){
-                cout<<"Hijo "<<x+1<<endl;
+                //cout<<"Hijo "<<x+1<<endl;
                 printR(p->hijos[x]);  
             }
         }
+        else{
+            ofstream file; 
+        file.open("anish.txt",std::ios_base::app | std::ios_base::out);
+        file<<p->LI.x<<","<<p->LI.y
+        <<","<<p->LS.x<<","<<p->LS.y<< endl;
+        
         file.close();
+        }
     
     }
 }

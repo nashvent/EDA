@@ -5,7 +5,7 @@
   </head>
 <body>
 
-<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #d3d3d3;">
+<canvas id="myCanvas" width="8000" height="8000" style="border:1px solid #d3d3d3;">
 </canvas>
 <script>
 
@@ -14,19 +14,16 @@ var ctx = c.getContext("2d");
 var escala={x:7,y:7}
 
 ctx.scale(escala.x,escala.y);
-ctx.lineWidth = 0.2;
+ctx.lineWidth = 0.1;
 ctx.fillStyle="#FF0000";
 ctx.stroke();
 
 function drawPoint(x,y){
-  ctx.fillRect(x,y,1,1);
+  ctx.fillRect(x,y,0.25,0.25);
 }
 
-function drawNode(x,y,x1,y1){
-  
+function drawNode(x,y,x1,y1){  
   ctx.rect(x,y,(x1-x),(y1-y));
-  ctx.stroke();
-
 }
 
 /*
@@ -39,6 +36,7 @@ c.addEventListener('click', function(event) {
 }, false);
 */
 function printPoints(pnts){
+  var t0 = performance.now();
   apnts = pnts.split("\n");
   var npnts=[]
   for (let entry of apnts) {
@@ -46,20 +44,29 @@ function printPoints(pnts){
     npnts.push(tpnt);
     drawPoint(tpnt[0],tpnt[1]);
   }
-  console.log(npnts);
+  var t1 = performance.now();
+  console.log("Points " + (t1 - t0) + " milliseconds.");
+  //console.log(npnts);
 }
 
 function printNodes(nds){
-
+  var t0 = performance.now();
 
   var ands = nds.split("\n");
   var nnds=[]
+
   for (let entry of ands) {
     tnds=entry.split(",");
-    nnds.push(tnds);
+    nnds.push(tnds);  
     drawNode(tnds[0],tnds[1],tnds[2],tnds[3]);
+    
   }
-  console.log(nnds);
+  ctx.stroke();   
+  
+  var t1 = performance.now();
+  console.log("Nodes " + (t1 - t0) + " milliseconds.")
+
+  //console.log(nnds);
 }
 
 fetch('anish2.txt')
@@ -69,7 +76,7 @@ fetch('anish2.txt')
 fetch('anish.txt')
   .then(response => response.text())
   .then(text => printNodes(text))
-
+  
 
 </script> 
 

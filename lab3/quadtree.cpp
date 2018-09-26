@@ -12,9 +12,10 @@ vector<string> splitString(string str){
     return vect;
 }
 int main(){
+    int maxLim=300;
     Punto LI(0,0);
-    Punto LS(100,100);
-    Quadtree qt(LI,LS,2); 
+    Punto LS((float)maxLim,(float)maxLim);
+    Quadtree qt(LI,LS,3); 
     float x,y;
     ofstream ofs;
     ofs.open("anish2.txt", std::ofstream::out | std::ofstream::trunc);
@@ -22,19 +23,21 @@ int main(){
     ofs.open("anish.txt", std::ofstream::out | std::ofstream::trunc);
     ofs.close();
 
-    ifstream file("crime50k.csv");
+    /*ifstream file("crime50k.csv");
     string str; 
     while (std::getline(file, str))
     {
         vector<string>temp;
         temp=splitString(str);
         cout<<temp[15]<<endl;
-    }
-    
-    /*for(int i=0;i<6;i++){
-        cin>>x>>y;
-        qt.insert(Punto(x,y));
     }*/
+    srand (time(NULL));
+    
+    for(int i=0;i<50000;i++){
+        x=rand()%maxLim;
+        y=rand()%maxLim;
+        qt.insert(Punto(x,y));
+    }
  
 
  
