@@ -128,13 +128,21 @@ void Quadtree::insert(Punto pnt){
 
 int Quadtree::search(Punto pnt,Nodo* &temp){
     temp=root;
+    bool verif;
     while(!temp->hoja){
+        verif=true;
         for(int x=0;x<temp->hijos.size();x++){
             if(temp->hijos[x]->pertenece(pnt)){
                 temp=temp->hijos[x];
+                verif=false;
                 break;
             }
         }
+        if(verif){
+            
+            return temp->posicion(pnt);
+        }
+        
     }
     return temp->posicion(pnt);
 }
@@ -151,12 +159,8 @@ bool Quadtree::remove(Punto pnt){
 
 void Quadtree::printR(Nodo *p){
     if(p!=NULL){   
-
         //p->printLimites();
         p->printData();
-
-
-
         if(!p->hoja){
             for(int x=0;x<4;x++){
                 //cout<<"Hijo "<<x+1<<endl;

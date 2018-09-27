@@ -11,15 +11,18 @@
 
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-var escala={x:7,y:7}
-
+var escala={x:1800,y:1800}
 ctx.scale(escala.x,escala.y);
-ctx.lineWidth = 0.1;
+ctx.translate(-40, 90);
+//ctx.beginPath(); // begin custom shape
+//ctx.moveTo(-40, -87.5);
+//ctx.scale(1,-1);
+ctx.lineWidth = 0.0003;
 ctx.fillStyle="#FF0000";
 ctx.stroke();
 
 function drawPoint(x,y){
-  ctx.fillRect(x,y,0.25,0.25);
+  ctx.fillRect(x,y,0.0025,0.0025);
 }
 
 function drawNode(x,y,x1,y1){  
