@@ -19,14 +19,13 @@ int main(){
     //Punto LI(0,0);
     //Punto LS(100,100);
     
-    Quadtree qt(LI,LS,3); 
+    Quadtree qt(LI,LS,10); 
     float x,y;
     ofstream ofs;
     ofs.open("anish2.txt", std::ofstream::out | std::ofstream::trunc);
     ofs.close();
     ofs.open("anish.txt", std::ofstream::out | std::ofstream::trunc);
     ofs.close();
-
 
     ifstream file("crime50k.csv");
     string str;
