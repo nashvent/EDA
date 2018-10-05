@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="paper.js"></script>
+<script type="text/javascript">	
+	window.onload = function() {
+		var canvas = document.getElementById('myCanvas');
+		paper.setup(canvas);
+		var path = new paper.Path();
+		path.strokeColor = 'black';
+		
+        var topLeft = new paper.Point(100, 100);
+        var rectSize = new paper.Size(200, -50);
+        var rect = new path.Rectangle(topLeft, rectSize);
+        paper.view.draw();
+    }
+</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

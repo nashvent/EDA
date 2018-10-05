@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+  </head>
+<body>
+
+<canvas id="myCanvas" width="8000" height="8000" style="border:1px solid #d3d3d3;">
+</canvas>
+<script>
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var escala={x:15,y:15}
+ctx.scale(escala.x,escala.y);
+//ctx.translate(100, 100);
+//ctx.beginPath(); // begin custom shape
+//ctx.moveTo(-40, -87.5);
+//ctx.scale(1,-1);
+ctx.lineWidth = 0.1;
+ctx.fillStyle="#FF0000";
+ctx.stroke();
+
+function drawPoint(x,y){
+  ctx.fillRect(x,y,0.25,0.25);
+}
+
+function drawNode(x,y,x1,y1){  
+  ctx.rect(x,y,(x1-x),(y1-y));
+}
+
+function update() {
+  ctx.beginPath();
+  ctx.arc(100, 100, 50, 0, 2 * Math.PI, true);
+  ctx.fillStyle = "#FF6A6A";
+  ctx.fill();
+}
+
+/*
+c.addEventListener('click', function(event) {
+    var rect = c.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    ctx.fillRect(x/escala.x,y/escala.y,0.25,0.25);
+    console.log("x: " + x + " y: " + y); 
+}, false);
+*/
+function printPoints(pnts){
+  var t0 = performance.now();
+  apnts = pnts.split("\n");
+  var npnts=[]
+  for (let entry of apnts) {
+    tpnt=entry.split(",");
+    npnts.push(tpnt);
+    drawPoint(tpnt[0],tpnt[1]);
+  }
+  var t1 = performance.now();
+  console.log("Points " + (t1 - t0) + " milliseconds.");
+  //console.log(npnts);
+}
+
+function printNodes(nds){
+  var t0 = performance.now();
+  var ands = nds.split("\n");
+  var nnds=[]
+
+  for (let entry of ands) {
+    tnds=entry.split(",");
+    nnds.push(tnds);  
+    drawNode(tnds[0],tnds[1],tnds[2],tnds[3]);
+    
+  }
+  ctx.stroke();   
+  
+  var t1 = performance.now();
+  console.log("Nodes " + (t1 - t0) + " milliseconds.")
+}
+
+fetch('anish2R.txt')
+  .then(response => response.text())
+  .then(text => printPoints(text))
+
+fetch('anishR.txt')
+  .then(response => response.text())
+  .then(text => printNodes(text))
+  
+
+</script> 
+
+</body>
+</html>

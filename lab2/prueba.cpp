@@ -1,8 +1,7 @@
 //g++ prueba.cpp -lX11 -lGL -lGLU -lglut -g -Wall -O2 -o prueba
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/glx.h>
-#include <GL/gl.h>
+#include <windows.h>
 #include <GL/glut.h>
 
 
