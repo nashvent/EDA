@@ -98,22 +98,6 @@ void displayGizmo()
 		glEnd();
 
 		qt->buscarCirculo(Punto(centrox,centroy),radio);
-		/*if(radio == 0)
-		{
-			radio = sqrt((Ra[1].y-Ra[0].y)*(Ra[1].y-Ra[0].y)+(Ra[1].x-Ra[0].x)*(Ra[1].x-Ra[0].x));		
-			centrox = Ra[0].x;
-			centroy = Ra[0].y;
-		}
-		
-		glBegin(GL_POINTS);
-		glColor3d(1.0,0.5,0.0);
-		for(double i=0;i<15;i=i+0.01)
-		{
-			calx = centrox + radio * cos(i);
-			caly = centroy + radio * sin(i);
-			glVertex2d(calx,caly);
-		}
-		glEnd();*/
 		
 	}
 
@@ -127,11 +111,7 @@ void displayGizmo()
 	glPointSize(2);
 	glBegin(GL_POINTS);
 	glColor3d(1.0,1.0,0.0);
-	/*
-	for(unsigned i=0;i<EPuntos.size();i++)
-	{	
-		glVertex2d(EPuntos[i].x,EPuntos[i].y);
-	}*/
+	
 	glEnd();
 	
 }
@@ -152,16 +132,6 @@ void OnMouseClick(int button, int state, int x, int y)
 		centrox=x;
 		centroy=y;
 		busqueda.clear();
-		/*
-		adaptRawPoint(x,y);
-		Punto pt2(x,y);
-
-		cout<<"x "<<x<<endl;
-		cout<<"y "<< y<<endl;
-
-		if(Ra.size() == 2)
-			Ra.clear();
-		Ra.push_back(pt2);*/
 	}
 }
 
@@ -258,8 +228,6 @@ int main(int argc, char* argv[]) {
 	/*sz=argv[2];                                                                                                                                                  
     int maxElem=atoi( sz.c_str());
 	for(int i=0;i<maxElem;i++){
-
-
 		qt->insert(Punto(RandomFloat(-300,300),RandomFloat(-300,300)));
 	}*/
 
@@ -301,10 +269,8 @@ int main(int argc, char* argv[]) {
         float xtemp = ::atof(temp[18].c_str());
         float ytemp = ::atof(temp[19].c_str());
 		if(xtemp>35 and xtemp<45 ){
-			//cout<<"xtemp ant"<<xtemp<<endl;
 			normalizar(xtemp,-300,300,xMax,xMin);
 			normalizar(ytemp,-300,300,yMax,yMin);
-			//cout<<"ytemp ant"<<ytemp<<endl;
 			qt->insert(Punto(xtemp,ytemp));
 			/*if(cont%1000==0){	
 				cout<<"xtemp "<<xtemp<<" ytemp"<<ytemp<<endl;

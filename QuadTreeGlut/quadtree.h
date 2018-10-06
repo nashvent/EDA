@@ -55,6 +55,12 @@ class Nodo{
         bool pertenece(Punto pnt){
             return contiene(LI,LS,pnt);
         }
+
+        Punto centro(){
+            float xm=(LI.x+LS.x)/2;
+            float ym=(LI.y+LS.y)/2;
+            return Punto(xm,ym);
+        }
         void dividir(int limEl){
             float xm=(LI.x+LS.x)/2;
             float ym=(LI.y+LS.y)/2;
@@ -125,6 +131,7 @@ class Quadtree{
         }
         void insert(Punto);
         int search(Punto,Nodo*&);
+        void searchRadio(Nodo*,Punto,float);
         bool remove(Punto);
         void print();
         void printR(Nodo *);
@@ -232,7 +239,7 @@ void Quadtree::drawR(Nodo *p){
 void Quadtree::buscarCirculo(Punto centro,float radio){
     busqueda.clear();
     //busqueda.push_back(centro);
-    Nodo* obj;
+    /*Nodo* obj;
     search(centro,obj);    
     if(obj!=NULL){
         for(int i=0;i<obj->data.size();i++){
@@ -242,7 +249,42 @@ void Quadtree::buscarCirculo(Punto centro,float radio){
             }
             
         }
-    }
+    }*/
+    /*float calx,caly;
+    for(double i=0;i<15;i=i+0.01){
+			calx = centro.x + radio * cos(i);
+			caly = centro.y + radio * sin(i);
+            Punto pntTemp(calx,caly);
+	        Nodo* obj;
+            search(pntTemp,obj);
+            searchRadio(obj,centro,radio);
+    }*/
+
+
+    Nodo *obj=root;
+    searchRadio(obj,centro,radio);
 }
 
-
+void Quadtree::searchRadio(Nodo* temp,Punto centro,float radio){
+    //temp=root;
+    if(temp!=NULL){
+        if(!temp->hoja){
+            for(int x=0;x<temp->hijos.size();x++){
+                //Punto pntCentro=temp->centro();
+                //if(distEuclidiana(pntCentro,centro)<(radio*3))
+                searchRadio(temp->hijos[x],centro,radio);
+                
+            }
+        }
+        else{
+            for(int i=0;i<temp->data.size();i++){
+                float dist=distEuclidiana(centro,temp->data[i]);
+                if(dist<=radio){
+                    busqueda.push_back(temp->data[i]);
+                }
+            }
+            
+        }
+    }
+    return;
+}
