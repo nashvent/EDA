@@ -26,6 +26,7 @@ vector<string> splitString(string str){
 
 
 bool ial = false;
+bool showCircle=false;
 
 Quadtree *qt;
 vector<Punto> Ra;
@@ -60,8 +61,16 @@ void displayGizmo()
 	}
 	glEnd();
 
+	glPointSize(2);
+	glBegin(GL_POINTS);
+	glColor3d(255,255,0);
+	for(unsigned i=0;i<busqueda.size();i++)
+	{	
+		glVertex2d(busqueda[i].x,busqueda[i].y );
+	}
+	glEnd();
 	/////////////////////////////////////////////
-	if(Ra.size()!=0 and Ra[0].x == centrox and  Ra[0].y == centroy)
+	/*if(Ra.size()!=0 and Ra[0].x == centrox and  Ra[0].y == centroy)
 	{
 		glPointSize(2);
 		glBegin(GL_POINTS);
@@ -70,12 +79,26 @@ void displayGizmo()
 		{	
 			glVertex2d(Ra[i].x,Ra[i].y);
 		}
+
+
 		glEnd();
-	}
+	}*/
 	//////////////////////////////////////////////
-	if(Ra.size()==2)
+	if(showCircle)
 	{	
-		if(radio == 0)
+		glBegin(GL_POINTS);
+		glColor3d(1.0,0.5,0.0);
+		radio=60;
+		for(double i=0;i<15;i=i+0.01)
+		{
+			calx = centrox + radio * cos(i);
+			caly = centroy + radio * sin(i);
+			glVertex2d(calx,caly);
+		}
+		glEnd();
+
+		qt->buscarCirculo(Punto(centrox,centroy),radio);
+		/*if(radio == 0)
 		{
 			radio = sqrt((Ra[1].y-Ra[0].y)*(Ra[1].y-Ra[0].y)+(Ra[1].x-Ra[0].x)*(Ra[1].x-Ra[0].x));		
 			centrox = Ra[0].x;
@@ -90,9 +113,10 @@ void displayGizmo()
 			caly = centroy + radio * sin(i);
 			glVertex2d(calx,caly);
 		}
-		glEnd();
+		glEnd();*/
 		
 	}
+
 	//qt->PertCirculo(qt->m_head,Ra[0].x,Ra[0].y,radio);
 	/*EPuntos.clear();
 	qt->drawCirculo(centrox,centroy,radio);
@@ -118,17 +142,26 @@ void OnMouseClick(int button, int state, int x, int y)
 	{
 		adaptRawPoint(x,y);
 		Punto pt(x,y);
-
 		qt->insert(pt);
 		//qt->draw();
 	}
 	else if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
+		showCircle=!showCircle;
+		adaptRawPoint(x,y);
+		centrox=x;
+		centroy=y;
+		busqueda.clear();
+		/*
 		adaptRawPoint(x,y);
 		Punto pt2(x,y);
+
+		cout<<"x "<<x<<endl;
+		cout<<"y "<< y<<endl;
+
 		if(Ra.size() == 2)
 			Ra.clear();
-		Ra.push_back(pt2);
+		Ra.push_back(pt2);*/
 	}
 }
 
@@ -137,6 +170,7 @@ void OnMouseMotion(int x, int y)
 	adaptRawPoint(x,y);
 	centrox = x;
 	centroy = y;
+	
 }
 
 void idle()
@@ -195,6 +229,11 @@ GLvoid window_key(unsigned char key, int x, int y) {
 
 }
 
+
+void normalizar(float &x,float a,float b,float xmax,float xmin){
+	x=a+((x-xmin)*(b-a))/(xmax-xmin);
+}
+
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -216,18 +255,19 @@ int main(int argc, char* argv[]) {
 	int szElem=atoi( sz.c_str());;
 	
 	qt = new Quadtree(Punto(-300,-300),Punto(300,300),szElem);
-	sz=argv[2];                                                                                                                                                  
+	/*sz=argv[2];                                                                                                                                                  
     int maxElem=atoi( sz.c_str());
 	for(int i=0;i<maxElem;i++){
 
 
 		qt->insert(Punto(RandomFloat(-300,300),RandomFloat(-300,300)));
-	}
+	}*/
 
 
-/*	ifstream file("crime50k.csv");
+	ifstream file("crime50k.csv");
     string str;
     int cont=0;
+	float xMax=0,xMin=1000,yMax=-1000,yMin=1000;
     while (std::getline(file, str))
     {
         vector<string>temp;
@@ -235,12 +275,47 @@ int main(int argc, char* argv[]) {
         temp=splitString(strtemp);
         float xtemp = ::atof(temp[18].c_str());
         float ytemp = ::atof(temp[19].c_str());
-        qt->insert(Punto(xtemp,ytemp));
-        if(cont%1000==0){
-            cout<<"Vamos "<<cont<<endl;        
-        }
+		if(xtemp>35 and xtemp<45 ){
+			//qt->insert(Punto(xtemp,ytemp));
+			if(xMax<xtemp) xMax=xtemp;
+			if(xMin>xtemp) xMin=xtemp;
+			if(yMax<ytemp) yMax=ytemp;
+			if(yMin>ytemp) yMin=ytemp;
+			
+		}		
+		
         cont++;
-    }*/    
+    }
+
+	ifstream file2("crime50k.csv");
+
+	cout<<"xmax "<<xMax<<endl;
+	cout<<"xmin "<<xMin<<endl;
+	cout<<"ymax "<<yMax<<endl;
+	cout<<"ymin "<<yMin<<endl;
+	while (std::getline(file2, str))
+    {
+        vector<string>temp;
+        string strtemp=str;
+        temp=splitString(strtemp);
+        float xtemp = ::atof(temp[18].c_str());
+        float ytemp = ::atof(temp[19].c_str());
+		if(xtemp>35 and xtemp<45 ){
+			//cout<<"xtemp ant"<<xtemp<<endl;
+			normalizar(xtemp,-300,300,xMax,xMin);
+			normalizar(ytemp,-300,300,yMax,yMin);
+			//cout<<"ytemp ant"<<ytemp<<endl;
+			qt->insert(Punto(xtemp,ytemp));
+			/*if(cont%1000==0){	
+				cout<<"xtemp "<<xtemp<<" ytemp"<<ytemp<<endl;
+            //cout<<"Vamos "<<cont<<endl;        
+        	}*/
+		}		
+		
+        cont++;
+    }
+
+
 	glutMainLoop();
 	return 0;
 }

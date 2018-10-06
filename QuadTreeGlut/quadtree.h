@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <iostream>
 #include <fstream>  
+#include <math.h>    
 using namespace std;
 
 class Punto{
@@ -27,12 +28,16 @@ class Punto{
 
 vector<pair<Punto,Punto> >lineas;
 vector<Punto> puntos;
-
+vector<Punto> busqueda;
 bool contiene(Punto LI,Punto LS,Punto pnt){
     if(LI.x<=pnt.x and LS.x>=pnt.x and LI.y<=pnt.y and LS.y>=pnt.y){
         return true;
     }
     return false;
+}
+
+float distEuclidiana(Punto a,Punto b){
+    return sqrt(pow(a.x-b.x,2)+pow(a.y-b.y,2));
 }
 
 class Nodo{
@@ -127,6 +132,7 @@ class Quadtree{
         void printRT(Nodo *);
         void draw();
         void drawR(Nodo *);
+        void buscarCirculo(Punto centro,float radio);
 };
 
 
@@ -223,5 +229,20 @@ void Quadtree::drawR(Nodo *p){
     }
 }
 
+void Quadtree::buscarCirculo(Punto centro,float radio){
+    busqueda.clear();
+    //busqueda.push_back(centro);
+    Nodo* obj;
+    search(centro,obj);    
+    if(obj!=NULL){
+        for(int i=0;i<obj->data.size();i++){
+            float dist=distEuclidiana(centro,obj->data[i]);
+            if(dist<=radio){
+                busqueda.push_back(obj->data[i]);
+            }
+            
+        }
+    }
+}
 
 
